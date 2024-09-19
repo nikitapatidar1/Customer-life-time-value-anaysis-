@@ -1,0 +1,72 @@
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import plotly.io as pio
+
+data = pd.read_csv(r'C:\Users\patid\Desktop\Python\day 30 customer_acquisition_data.csv ')
+print(data)
+ 
+ 
+ # Make a visulization for the distribution of costomer aquisition cost
+fig = px.histogram(data,
+                   x = 'cost',
+                   nbins = 20,
+                   title = ' Distribution aquisition by cost')
+fig.show()
+
+
+# creat a visulization for the distribution of revenue.
+fig = px.histogram(data,
+                   x = 'revenue',
+                   nbins = 20,
+                   title = ' Distribution of revenue')
+fig.show()
+# Compare the cost of aquasition  across various channels and determine which one are most and least profitable?
+
+cost_by_channel = cost_by_channel = data.groupby('channel')['cost'].mean().reset_index()
+print(cost_by_channel)
+fig  = px.bar(cost_by_channel,
+              x = 'channel',
+              y = 'cost',
+              title = 'customer acquisition cost by channel')
+fig.show()
+
+# Find out which channels are most and least effective at converting customers.
+
+conversion_by_channel = data.groupby('channel')['conversion_rate'].mean().reset_index()
+print(conversion_by_channel)
+
+fig  = px.bar(conversion_by_channel,
+              x = 'channel',
+              y = 'conversion_rate',
+              title = 'customer acquisition conversion by channel')
+fig.show()
+
+
+
+# calculate the total revenue by channel analyze the most and least profitable channels in terms of generating revenue.
+revenue_by_channel = data.groupby('channel')['revenue'].mean().reset_index()
+print('revenue_by_channel')
+fig  = px.pie(revenue_by_channel,
+             values = 'revenue',
+              names  = 'channel',
+              title = 'revenue acquisition cost by channel',
+              hole = 0.5,
+              color_discrete_sequence = px.colors.qualitative.Pastel)
+fig.show()
+
+# calculate the return on invesment (ROI) for each channel
+
+data['roi'] = data['revenue']/ data['cost']
+print(data['roi'])
+roi_by_channel = data.groupby('channel')['roi'].mean().reset_index()
+print('roi_by_channel')
+fig  = px.bar(roi_by_channel,
+              x = 'channel',
+              y = 'roi',
+              title = 'Return on investment  by channel')
+fig.show()
+
+
+
